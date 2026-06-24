@@ -27,6 +27,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
@@ -87,25 +88,51 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <div className="hidden md:flex items-center gap-4">
             <ThemeSwitcher />
             
-            <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 hover:bg-muted/50 py-1 px-2 rounded-full transition-colors outline-none">
+            <div className="relative">
+              <button 
+                onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                className="flex items-center gap-2 hover:bg-muted/50 py-1 px-2 rounded-full transition-colors outline-none"
+              >
                 <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-serif font-bold text-sm">
                   {user?.name?.charAt(0) || 'U'}
                 </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-md border-border/50 shadow-2xl">
-                <div className="px-3 py-2 border-b border-border/50 mb-1">
-                  <p className="text-sm font-medium font-serif">{user?.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-                </div>
-                <DropdownMenuItem onClick={() => navigate('/profile')} className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" /> Profile & Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10">
-                  <LogOut className="mr-2 h-4 w-4" /> Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </button>
+              
+              {isProfileMenuOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40" 
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-56 bg-background/95 backdrop-blur-md border border-border/50 shadow-2xl rounded-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    <div className="px-4 py-3 border-b border-border/50 bg-muted/20">
+                      <p className="text-sm font-medium font-serif">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+                    </div>
+                    <div className="p-1">
+                      <button 
+                        onClick={() => {
+                          setIsProfileMenuOpen(false);
+                          navigate('/profile');
+                        }} 
+                        className="w-full flex items-center px-3 py-2 text-sm rounded-lg hover:bg-muted/60 transition-colors text-left"
+                      >
+                        <Settings className="mr-2 h-4 w-4 text-muted-foreground" /> Profile & Settings
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setIsProfileMenuOpen(false);
+                          handleLogout();
+                        }} 
+                        className="w-full flex items-center px-3 py-2 text-sm rounded-lg hover:bg-destructive/10 text-destructive transition-colors text-left"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" /> Sign out
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Toggle */}
