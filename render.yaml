@@ -11,7 +11,7 @@ services:
       - key: PORT
         value: 5000
       - key: CLIENT_URL
-        value: "" # Empty because client is served from the same domain
+        value: "http://localhost:5173" # Also add your Vercel URL in Render dashboard
       - key: MONGODB_URI
         sync: false # Set this in the Render dashboard manually, or paste it here: mongodb+srv://kjayeshrao_db_user:b7v8uV8qTLxyUVyj@cluster0.qjdugqh.mongodb.net/?appName=Cluster0
       - key: JWT_SECRET
