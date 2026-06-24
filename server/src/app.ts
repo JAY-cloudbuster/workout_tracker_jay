@@ -71,29 +71,11 @@ if (config.env === 'development') {
 app.use(`/api/${config.apiVersion}`, routes);
 
 // ====================================================
-// Serve Frontend in Production
+// 404 Handler
 // ====================================================
-import path from 'path';
-
-if (process.env.NODE_ENV === 'production') {
-  // __dirname in dist/app.js is server/dist. We want to go to client/dist.
-  const clientPath = path.join(__dirname, '../../client/dist');
-  app.use(express.static(clientPath));
-
-  app.get('*', (req, res, next) => {
-    if (req.originalUrl.startsWith('/api')) {
-      return next();
-    }
-    res.sendFile(path.join(clientPath, 'index.html'));
-  });
-} else {
-  // ====================================================
-  // 404 Handler (API only in dev)
-  // ====================================================
-  app.all('*', (req, _res, next) => {
-    next(new NotFoundError(`Cannot ${req.method} ${req.originalUrl}`));
-  });
-}
+app.all('*', (req, _res, next) => {
+  next(new NotFoundError(`Cannot ${req.method} ${req.originalUrl}`));
+});
 
 // ====================================================
 // Error Handler
