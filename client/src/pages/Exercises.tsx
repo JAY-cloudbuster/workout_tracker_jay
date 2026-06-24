@@ -71,88 +71,91 @@ export default function Exercises() {
   });
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto font-sans pb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-border/40 pb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Exercise Library</h1>
-          <p className="text-muted-foreground mt-1">Browse, search, and organize your favorite exercises.</p>
+          <h1 className="text-4xl md:text-5xl font-serif font-medium tracking-tight mb-2">Exercise Library</h1>
+          <p className="text-muted-foreground">Browse, search, and organize your favorite movements.</p>
         </div>
       </div>
 
-      <div className="flex gap-4 border-b border-border/50 pb-2">
+      <div className="flex gap-8 border-b border-border/30 mb-8">
         <button 
           onClick={() => setActiveTab('all')} 
-          className={`font-medium pb-2 border-b-2 px-1 transition-colors ${activeTab === 'all' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+          className={`font-medium pb-4 border-b-2 text-sm uppercase tracking-wider transition-all duration-300 ${activeTab === 'all' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
         >
           All Exercises
         </button>
         <button 
           onClick={() => setActiveTab('favorites')} 
-          className={`font-medium pb-2 border-b-2 px-1 transition-colors flex items-center gap-2 ${activeTab === 'favorites' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
+          className={`font-medium pb-4 border-b-2 text-sm uppercase tracking-wider transition-all duration-300 flex items-center gap-2 ${activeTab === 'favorites' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}
         >
-          Favorites <Star className="h-3.5 w-3.5" />
+          Favorites <Star className="h-4 w-4" />
         </button>
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-4 mb-8">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/50" />
           <Input 
             placeholder="Search by name or muscle group..." 
-            className="pl-9 glass border-none shadow-md"
+            className="pl-12 h-14 bg-muted/20 border-border/40 rounded-2xl text-base shadow-sm focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-transparent transition-all"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Button variant="outline" className="glass border-none shadow-md" size="icon">
-          <Filter className="h-4 w-4" />
+        <Button variant="outline" className="h-14 w-14 rounded-2xl border-border/40 shadow-sm" size="icon">
+          <Filter className="h-5 w-5 text-muted-foreground" />
         </Button>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12">
+        <div className="flex justify-center py-20">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
         </div>
       ) : filteredExercises.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredExercises.map((exercise) => (
-            <Card key={exercise._id} className="glass-card border-none hover:bg-card/90 transition-all hover:scale-[1.02] cursor-pointer group">
-              <CardContent className="p-5">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-semibold text-lg">{exercise.name}</h3>
-                  <button 
-                    onClick={(e) => toggleFavorite(e, exercise._id)}
-                    className="p-1 rounded-full hover:bg-secondary transition-colors"
-                  >
-                    <Star className={`h-5 w-5 ${favorites.has(exercise._id) ? 'fill-yellow-500 text-yellow-500' : 'text-muted-foreground group-hover:text-foreground'}`} />
-                  </button>
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {exercise.primaryMuscles?.map((muscle: string) => (
-                    <span key={muscle} className="text-[10px] uppercase font-bold px-2 py-1 rounded-md bg-primary/20 text-primary">
-                      {muscle.replace('_', ' ')}
-                    </span>
-                  ))}
-                  {exercise.equipment && (
-                    <span className="text-[10px] uppercase font-bold px-2 py-1 rounded-md bg-secondary text-secondary-foreground">
-                      {exercise.equipment?.replace('_', ' ')}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex items-center text-xs text-muted-foreground mt-auto">
-                  <Activity className="h-3.5 w-3.5 mr-1" />
-                  {exercise.difficulty ? (exercise.difficulty.charAt(0).toUpperCase() + exercise.difficulty.slice(1)) : 'Intermediate'} Level
-                </div>
-              </CardContent>
-            </Card>
+            <div 
+              key={exercise._id} 
+              className="group relative overflow-hidden rounded-3xl bg-muted/20 border border-border/30 hover:border-primary/40 hover:bg-muted/40 transition-all duration-300 cursor-pointer p-6 flex flex-col h-full"
+            >
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="font-serif text-xl font-medium tracking-tight group-hover:text-primary transition-colors leading-tight pr-4">
+                  {exercise.name}
+                </h3>
+                <button 
+                  onClick={(e) => toggleFavorite(e, exercise._id)}
+                  className="p-2 rounded-full bg-background/50 border border-border/50 hover:bg-background transition-colors shadow-sm -mt-2 -mr-2"
+                >
+                  <Star className={`h-4 w-4 ${favorites.has(exercise._id) ? 'fill-yellow-500 text-yellow-500' : 'text-muted-foreground group-hover:text-foreground'}`} />
+                </button>
+              </div>
+              
+              <div className="flex flex-wrap gap-2 mb-8 flex-grow">
+                {exercise.primaryMuscles?.map((muscle: string) => (
+                  <span key={muscle} className="text-[9px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-primary/10 text-primary border border-primary/20">
+                    {muscle.replace('_', ' ')}
+                  </span>
+                ))}
+                {exercise.equipment && (
+                  <span className="text-[9px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground border border-border/50">
+                    {exercise.equipment?.replace('_', ' ')}
+                  </span>
+                )}
+              </div>
+              
+              <div className="flex items-center text-xs font-medium text-muted-foreground mt-auto border-t border-border/40 pt-4">
+                <Activity className="h-4 w-4 mr-2 opacity-70" />
+                {exercise.difficulty ? (exercise.difficulty.charAt(0).toUpperCase() + exercise.difficulty.slice(1)) : 'Intermediate'} Level
+              </div>
+            </div>
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-muted-foreground">
-          <Activity className="h-12 w-12 mx-auto mb-3 opacity-20" />
-          <p>{activeTab === 'favorites' ? "You haven't favorited any exercises yet." : "No exercises found matching your search."}</p>
+        <div className="text-center py-24 text-muted-foreground border border-dashed border-border/50 rounded-3xl bg-muted/10">
+          <Activity className="h-12 w-12 mx-auto mb-4 opacity-20" />
+          <p className="text-lg">{activeTab === 'favorites' ? "You haven't favorited any exercises yet." : "No exercises found matching your search."}</p>
         </div>
       )}
     </div>

@@ -47,18 +47,21 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-8 pb-8">
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto font-sans pb-16">
+      
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-border/40 pb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Welcome back, {user?.name?.split(' ')[0]}</h1>
-          <p className="text-muted-foreground mt-1">Here is your conventional training summary.</p>
+          <h1 className="text-4xl md:text-5xl font-serif font-medium tracking-tight mb-2">
+            Welcome back, {user?.name?.split(' ')[0]}
+          </h1>
+          <p className="text-muted-foreground">Your training command center.</p>
         </div>
         <div className="flex gap-3 w-full md:w-auto">
-          <Button variant="outline" asChild className="flex-1 md:flex-none">
+          <Button variant="outline" asChild className="flex-1 md:flex-none border-border/50 rounded-xl">
             <Link to="/workouts">History</Link>
           </Button>
-          <Button asChild className="flex-1 md:flex-none">
+          <Button asChild className="flex-1 md:flex-none shadow-lg shadow-primary/20 rounded-xl">
             <Link to="/workouts/new">
               <Dumbbell className="mr-2 h-4 w-4" /> Log Workout
             </Link>
@@ -66,99 +69,82 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Main Stats */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="glass-card border-none shadow-lg bg-gradient-to-br from-card to-card/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Workouts</CardTitle>
-            <Calendar className="h-4 w-4 text-primary" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{data?.totalWorkouts || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1 flex items-center">
-              All-time completed
-            </p>
-          </CardContent>
-        </Card>
+      {/* Main Stats - Magazine Layout */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 mb-16">
+        
+        <div className="space-y-2 border-l border-border/40 pl-4 hover:border-primary/50 transition-colors">
+          <div className="text-sm font-semibold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+            <Calendar className="h-4 w-4" /> Workouts
+          </div>
+          <div className="text-4xl md:text-5xl font-serif font-medium text-foreground">
+            {data?.totalWorkouts || 0}
+          </div>
+        </div>
 
-        <Card className="glass-card border-none shadow-lg bg-gradient-to-br from-card to-card/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Volume</CardTitle>
-            <Database className="h-4 w-4 text-orange-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{(data?.totalVolume || 0).toLocaleString()} kg</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Weight × Reps
-            </p>
-          </CardContent>
-        </Card>
+        <div className="space-y-2 border-l border-border/40 pl-4 hover:border-primary/50 transition-colors">
+          <div className="text-sm font-semibold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+            <Database className="h-4 w-4" /> Volume
+          </div>
+          <div className="text-4xl md:text-5xl font-serif font-medium text-foreground">
+            {(data?.totalVolume || 0).toLocaleString()}<span className="text-xl md:text-2xl text-muted-foreground font-sans ml-1">kg</span>
+          </div>
+        </div>
 
-        <Card className="glass-card border-none shadow-lg bg-gradient-to-br from-card to-card/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sets</CardTitle>
-            <Repeat className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{data?.totalSets?.toLocaleString() || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Completed working sets
-            </p>
-          </CardContent>
-        </Card>
+        <div className="space-y-2 border-l border-border/40 pl-4 hover:border-primary/50 transition-colors">
+          <div className="text-sm font-semibold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+            <Repeat className="h-4 w-4" /> Sets
+          </div>
+          <div className="text-4xl md:text-5xl font-serif font-medium text-foreground">
+            {data?.totalSets?.toLocaleString() || 0}
+          </div>
+        </div>
 
-        <Card className="glass-card border-none shadow-lg bg-gradient-to-br from-card to-card/50">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Frequency</CardTitle>
-            <Activity className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{data?.averageWorkoutFrequency || 0}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Workouts per week
-            </p>
-          </CardContent>
-        </Card>
+        <div className="space-y-2 border-l border-border/40 pl-4 hover:border-primary/50 transition-colors">
+          <div className="text-sm font-semibold tracking-widest text-muted-foreground uppercase flex items-center gap-2">
+            <Activity className="h-4 w-4" /> Freq
+          </div>
+          <div className="text-4xl md:text-5xl font-serif font-medium text-foreground">
+            {data?.averageWorkoutFrequency || 0}<span className="text-xl md:text-2xl text-muted-foreground font-sans ml-1">/wk</span>
+          </div>
+        </div>
+
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="glass-card border-none shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Timer className="h-5 w-5 text-purple-500" />
-              Duration Stats
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between items-center py-2 border-b border-border/50">
-              <span className="text-muted-foreground">Average Workout Duration</span>
-              <span className="font-bold">{data?.averageWorkoutDuration ? formatDuration(data.averageWorkoutDuration) : '0s'}</span>
+      {/* Secondary Stats */}
+      <div className="grid md:grid-cols-2 gap-8">
+        
+        <div className="bg-muted/20 rounded-3xl p-8 border border-border/30 hover:border-border/60 transition-colors">
+          <h3 className="font-serif text-2xl font-medium mb-6 flex items-center gap-3">
+            <Timer className="h-6 w-6 text-primary" /> Training Duration
+          </h3>
+          <div className="space-y-6">
+            <div>
+              <p className="text-sm font-semibold tracking-wider text-muted-foreground uppercase mb-1">Average Session</p>
+              <p className="text-3xl font-medium">{data?.averageWorkoutDuration ? formatDuration(data.averageWorkoutDuration) : '0m'}</p>
             </div>
-            <div className="flex justify-between items-center py-2 mt-2">
-              <span className="text-muted-foreground">Total Exercises Logged</span>
-              <span className="font-bold">{data?.totalExercises?.toLocaleString() || 0}</span>
+            <div>
+              <p className="text-sm font-semibold tracking-wider text-muted-foreground uppercase mb-1">Total Exercises Logged</p>
+              <p className="text-3xl font-medium">{data?.totalExercises?.toLocaleString() || 0}</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="glass-card border-none shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-red-500" />
-              Training Patterns
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between items-center py-2 border-b border-border/50">
-              <span className="text-muted-foreground">Most Trained Muscle</span>
-              <span className="font-bold capitalize">{data?.mostTrainedMuscle?.replace('_', ' ')}</span>
+        <div className="bg-muted/20 rounded-3xl p-8 border border-border/30 hover:border-border/60 transition-colors">
+          <h3 className="font-serif text-2xl font-medium mb-6 flex items-center gap-3">
+            <Target className="h-6 w-6 text-primary" /> Patterns
+          </h3>
+          <div className="space-y-6">
+            <div>
+              <p className="text-sm font-semibold tracking-wider text-muted-foreground uppercase mb-1">Primary Muscle Group</p>
+              <p className="text-3xl font-medium capitalize">{data?.mostTrainedMuscle?.replace('_', ' ') || 'None'}</p>
             </div>
-            <div className="flex justify-between items-center py-2 mt-2">
-              <span className="text-muted-foreground">Most Logged Exercise</span>
-              <span className="font-bold">{data?.mostUsedExercise}</span>
+            <div>
+              <p className="text-sm font-semibold tracking-wider text-muted-foreground uppercase mb-1">Most Frequent Exercise</p>
+              <p className="text-3xl font-medium truncate">{data?.mostUsedExercise || 'None'}</p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
       </div>
     </div>
   );

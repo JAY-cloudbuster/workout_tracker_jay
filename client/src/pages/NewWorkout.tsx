@@ -217,302 +217,359 @@ export default function NewWorkout() {
   };
 
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-6 pb-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">New Workout</h1>
-          <p className="text-muted-foreground mt-1">Log your comprehensive training session.</p>
+    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 pb-20 max-w-3xl mx-auto font-sans">
+      
+      {/* Header Actions */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-10">
+        <div className="w-full">
+          <input
+            type="text"
+            placeholder="Untitled Workout"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="w-full bg-transparent border-none outline-none font-serif text-4xl md:text-5xl font-semibold placeholder:text-muted-foreground/30 focus:ring-0 p-0 text-foreground"
+          />
+          <div className="flex items-center gap-2 text-muted-foreground mt-2">
+            <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+          </div>
         </div>
-        <div className="flex gap-2 w-full md:w-auto">
-          <Button variant="outline" onClick={() => navigate('/workouts')} className="flex-1 md:flex-none">Cancel</Button>
-          <Button variant="outline" onClick={() => handleSave(false)} disabled={saving} className="flex-1 md:flex-none">
-            <Save className="mr-2 h-4 w-4" /> Save Draft
+        
+        <div className="flex gap-2 w-full md:w-auto shrink-0">
+          <Button variant="ghost" onClick={() => navigate('/workouts')} className="flex-1 md:flex-none hover:bg-muted text-muted-foreground">Cancel</Button>
+          <Button variant="outline" onClick={() => handleSave(false)} disabled={saving} className="flex-1 md:flex-none border-border/50">
+            <Save className="mr-2 h-4 w-4" /> Save
           </Button>
-          <Button onClick={() => handleSave(true)} disabled={saving} className="flex-1 md:flex-none">
+          <Button onClick={() => handleSave(true)} disabled={saving} className="flex-1 md:flex-none shadow-lg shadow-primary/20">
             <Check className="mr-2 h-4 w-4" /> Complete
           </Button>
         </div>
       </div>
 
       {error && (
-        <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-md border border-destructive/20">{error}</div>
+        <div className="p-4 mb-8 bg-destructive/10 text-destructive text-sm rounded-xl border border-destructive/20">{error}</div>
       )}
 
-      {/* Workout Info */}
-      <Card className="glass-card border-none shadow-lg">
-        <CardContent className="pt-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2 col-span-1 md:col-span-2">
-              <Label>Workout Name *</Label>
-              <Input placeholder="e.g. Push Day A" value={name} onChange={e => setName(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Tags (comma separated)</Label>
-              <Input placeholder="e.g. Morning, Deload" value={tagsStr} onChange={e => setTagsStr(e.target.value)} />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="space-y-2">
-              <Label>Split *</Label>
-              <select
-                value={split}
-                onChange={e => setSplit(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {SPLIT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label>Type</Label>
-              <select
-                value={workoutType}
-                onChange={e => setWorkoutType(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                {WORKOUT_TYPES.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label>Location</Label>
-              <Input placeholder="e.g. Commercial Gym" value={location} onChange={e => setLocation(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label>Training Partner</Label>
-              <Input placeholder="Partner name" value={trainingPartner} onChange={e => setTrainingPartner(e.target.value)} />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="space-y-2 col-span-2">
-              <Label>Mood (1-5)</Label>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(v => (
-                  <button key={v} onClick={() => setMood(v)} className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${mood === v ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
-                    {v}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-2 col-span-2">
-              <Label>Energy (1-5)</Label>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(v => (
-                  <button key={v} onClick={() => setEnergy(v)} className={`w-10 h-10 rounded-lg text-sm font-medium transition-colors ${energy === v ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}>
-                    {v}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label>Workout Notes</Label>
-            <textarea
-              placeholder="Gym was crowded, felt strong today..."
-              value={notes}
-              onChange={e => setNotes(e.target.value)}
-              className="flex min-h-[60px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Live Stats Summary */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="glass-card border-none">
-          <CardContent className="pt-4 pb-4 text-center">
-            <div className="text-2xl font-bold">{exercises.length}</div>
-            <div className="text-xs text-muted-foreground">Exercises</div>
-          </CardContent>
-        </Card>
-        <Card className="glass-card border-none">
-          <CardContent className="pt-4 pb-4 text-center">
-            <div className="text-2xl font-bold">{totalSets}</div>
-            <div className="text-xs text-muted-foreground">Completed Sets</div>
-          </CardContent>
-        </Card>
-        <Card className="glass-card border-none">
-          <CardContent className="pt-4 pb-4 text-center">
-            <div className="text-2xl font-bold">{totalReps}</div>
-            <div className="text-xs text-muted-foreground">Total Reps</div>
-          </CardContent>
-        </Card>
-        <Card className="glass-card border-none">
-          <CardContent className="pt-4 pb-4 text-center">
-            <div className="text-2xl font-bold">{totalVolume.toLocaleString()}</div>
-            <div className="text-xs text-muted-foreground">Volume (kg)</div>
-          </CardContent>
-        </Card>
+      <div className="flex flex-wrap items-center gap-6 mb-12 py-6 border-y border-border/40">
+        <div>
+          <div className="text-3xl font-serif font-medium">{exercises.length}</div>
+          <div className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">Exercises</div>
+        </div>
+        <div className="w-px h-10 bg-border/40 hidden md:block"></div>
+        <div>
+          <div className="text-3xl font-serif font-medium">{totalSets}</div>
+          <div className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">Sets Done</div>
+        </div>
+        <div className="w-px h-10 bg-border/40 hidden md:block"></div>
+        <div>
+          <div className="text-3xl font-serif font-medium">{totalVolume.toLocaleString()}</div>
+          <div className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">Volume (kg)</div>
+        </div>
       </div>
 
-      {/* Exercises List */}
-      {exercises.map((ex, exIndex) => (
-        <Card key={exIndex} className="glass-card border-none shadow-lg overflow-hidden">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <span className="bg-primary/20 text-primary text-sm font-bold w-7 h-7 rounded-full flex items-center justify-center">{exIndex + 1}</span>
-                {ex.exerciseName}
-              </CardTitle>
-              <div className="flex gap-1">
-                <Button variant="ghost" size="icon" className="text-muted-foreground" title="Exercise History">
+      {/* Metadata Section - Clean Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mb-16">
+        <div className="space-y-6">
+          <div className="space-y-1.5 border-b border-border/30 pb-2 focus-within:border-primary/50 transition-colors">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Split Type</Label>
+            <select
+              value={split}
+              onChange={e => setSplit(e.target.value)}
+              className="w-full bg-transparent border-none outline-none text-base p-0 cursor-pointer text-foreground focus:ring-0"
+            >
+              {SPLIT_OPTIONS.map(o => <option key={o.value} value={o.value} className="bg-background">{o.label}</option>)}
+            </select>
+          </div>
+          
+          <div className="space-y-1.5 border-b border-border/30 pb-2 focus-within:border-primary/50 transition-colors">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Training Goal</Label>
+            <select
+              value={workoutType}
+              onChange={e => setWorkoutType(e.target.value)}
+              className="w-full bg-transparent border-none outline-none text-base p-0 cursor-pointer text-foreground focus:ring-0"
+            >
+              {WORKOUT_TYPES.map(o => <option key={o.value} value={o.value} className="bg-background">{o.label}</option>)}
+            </select>
+          </div>
+          
+          <div className="space-y-1.5 border-b border-border/30 pb-2 focus-within:border-primary/50 transition-colors">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Tags</Label>
+            <input 
+              placeholder="e.g. Morning, Deload" 
+              value={tagsStr} 
+              onChange={e => setTagsStr(e.target.value)} 
+              className="w-full bg-transparent border-none outline-none text-base p-0 placeholder:text-muted-foreground/30 text-foreground"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="space-y-1.5 border-b border-border/30 pb-2 focus-within:border-primary/50 transition-colors">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Location</Label>
+            <input 
+              placeholder="e.g. Commercial Gym" 
+              value={location} 
+              onChange={e => setLocation(e.target.value)} 
+              className="w-full bg-transparent border-none outline-none text-base p-0 placeholder:text-muted-foreground/30 text-foreground"
+            />
+          </div>
+          
+          <div className="flex items-center justify-between border-b border-border/30 pb-2">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Mood</Label>
+            <div className="flex gap-1.5">
+              {[1, 2, 3, 4, 5].map(v => (
+                <button 
+                  key={v} 
+                  onClick={() => setMood(v)} 
+                  className={`w-7 h-7 rounded-full text-xs font-medium transition-all ${mood === v ? 'bg-primary text-primary-foreground scale-110 shadow-md shadow-primary/20' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between border-b border-border/30 pb-2">
+            <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Energy</Label>
+            <div className="flex gap-1.5">
+              {[1, 2, 3, 4, 5].map(v => (
+                <button 
+                  key={v} 
+                  onClick={() => setEnergy(v)} 
+                  className={`w-7 h-7 rounded-full text-xs font-medium transition-all ${energy === v ? 'bg-primary text-primary-foreground scale-110 shadow-md shadow-primary/20' : 'bg-muted/50 text-muted-foreground hover:bg-muted'}`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="col-span-1 md:col-span-2 space-y-1.5 border-b border-border/30 pb-2 focus-within:border-primary/50 transition-colors">
+          <Label className="text-xs font-semibold tracking-wider uppercase text-muted-foreground">Journal Entry (Notes)</Label>
+          <textarea
+            placeholder="How did the session feel? Any particular highlights..."
+            value={notes}
+            onChange={e => setNotes(e.target.value)}
+            className="w-full min-h-[80px] bg-transparent border-none outline-none text-base p-0 resize-none placeholder:text-muted-foreground/30 text-foreground"
+          />
+        </div>
+      </div>
+
+      {/* Exercises Section (The "Chapters") */}
+      <div className="space-y-12 mb-16">
+        {exercises.map((ex, exIndex) => (
+          <div key={exIndex} className="relative pl-0 md:pl-8 group">
+            {/* Minimal line indicator for exercises on desktop */}
+            <div className="hidden md:block absolute left-0 top-2 bottom-0 w-px bg-border/30 group-hover:bg-primary/30 transition-colors"></div>
+            
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="font-serif text-2xl md:text-3xl font-medium text-foreground flex items-center gap-3">
+                  <span className="text-primary/50 text-xl">{exIndex + 1}.</span> 
+                  {ex.exerciseName}
+                </h3>
+              </div>
+              <div className="flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:bg-muted">
                   <History className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => removeExercise(exIndex)} className="text-destructive hover:text-destructive">
+                <Button variant="ghost" size="icon" onClick={() => removeExercise(exIndex)} className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            
-            {/* Set Management Grid */}
-            <div className="overflow-x-auto pb-2">
-              <div className="min-w-[600px]">
-                {/* Header */}
-                <div className="grid grid-cols-[3rem_100px_80px_80px_70px_70px_80px_auto] gap-2 text-xs text-muted-foreground font-medium px-1 mb-2">
-                  <span className="text-center">Set</span>
-                  <span>Type</span>
-                  <span>Weight</span>
-                  <span>Reps</span>
-                  <span>RPE</span>
-                  <span>Tempo</span>
-                  <span>Rest (s)</span>
-                  <span className="text-right">Done</span>
-                </div>
 
-                {/* Sets */}
-                <div className="space-y-2">
-                  {ex.sets.map((set, setIndex) => (
-                    <div key={setIndex} className={`grid grid-cols-[3rem_100px_80px_80px_70px_70px_80px_auto] gap-2 items-center p-2 rounded-lg transition-colors ${set.completed ? 'bg-green-500/10' : 'bg-secondary/50'}`}>
-                      <span className="text-center text-sm font-medium text-muted-foreground">{set.setNumber}</span>
-                      
-                      <select value={set.setType} onChange={e => updateSet(exIndex, setIndex, 'setType', e.target.value)} className="h-8 rounded-md border border-input bg-background px-2 text-xs">
-                        {SET_TYPES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-                      </select>
-                      
-                      <div className="relative">
-                        <Input type="number" value={set.weight || ''} onChange={e => updateSet(exIndex, setIndex, 'weight', parseFloat(e.target.value) || 0)} className="h-8 text-sm pr-6" placeholder="0" />
-                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">kg</span>
-                      </div>
-                      
-                      <Input type="number" value={set.reps || ''} onChange={e => updateSet(exIndex, setIndex, 'reps', parseInt(e.target.value) || 0)} className="h-8 text-sm" placeholder="0" />
-                      
-                      <Input type="number" value={set.rpe || ''} onChange={e => updateSet(exIndex, setIndex, 'rpe', parseFloat(e.target.value) || undefined)} className="h-8 text-sm" placeholder="-" min="1" max="10" />
-                      
-                      <Input type="text" value={set.tempo || ''} onChange={e => updateSet(exIndex, setIndex, 'tempo', e.target.value)} className="h-8 text-sm placeholder:text-muted-foreground/50" placeholder="3010" />
-                      
-                      <div className="relative">
-                        <Input type="number" value={set.restTime || ''} onChange={e => updateSet(exIndex, setIndex, 'restTime', parseInt(e.target.value) || undefined)} className="h-8 text-sm pr-4" placeholder="120" />
-                        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">s</span>
-                      </div>
-                      
-                      <div className="flex gap-1 justify-end">
-                        <button onClick={() => toggleSetComplete(exIndex, setIndex)} className={`w-8 h-8 rounded-md flex items-center justify-center transition-colors ${set.completed ? 'bg-green-500 text-white' : 'bg-secondary hover:bg-secondary/80'}`}>
-                          <Check className="h-4 w-4" />
-                        </button>
-                        <button onClick={() => removeSet(exIndex, setIndex)} className="w-8 h-8 rounded-md flex items-center justify-center bg-secondary hover:bg-destructive/20 hover:text-destructive transition-colors">
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+            {/* Sets Grid - Minimalist Redesign */}
+            <div className="space-y-3 mb-6">
+              {/* Header row */}
+              <div className="grid grid-cols-[30px_1fr_60px_60px_60px_60px_60px_40px] md:grid-cols-[40px_1fr_80px_80px_80px_80px_80px_60px] gap-2 md:gap-4 px-2 text-[10px] md:text-xs font-semibold tracking-wider uppercase text-muted-foreground">
+                <div className="text-center">Set</div>
+                <div>Type</div>
+                <div className="text-center">kg</div>
+                <div className="text-center">Reps</div>
+                <div className="text-center">RPE</div>
+                <div className="text-center hidden md:block">Tempo</div>
+                <div className="text-center hidden md:block">Rest (s)</div>
+                <div></div>
+              </div>
+
+              {ex.sets.map((set, setIndex) => (
+                <div 
+                  key={setIndex} 
+                  className={`grid grid-cols-[30px_1fr_60px_60px_60px_60px_60px_40px] md:grid-cols-[40px_1fr_80px_80px_80px_80px_80px_60px] gap-2 md:gap-4 items-center p-2 rounded-xl transition-all duration-300 ${set.completed ? 'bg-primary/5 shadow-sm border border-primary/10' : 'bg-muted/30 border border-transparent hover:border-border/50'}`}
+                >
+                  <div className={`text-center font-serif text-sm ${set.completed ? 'text-primary' : 'text-muted-foreground'}`}>{set.setNumber}</div>
+                  
+                  <select 
+                    value={set.setType} 
+                    onChange={e => updateSet(exIndex, setIndex, 'setType', e.target.value)} 
+                    className="bg-transparent border-none outline-none text-xs md:text-sm p-0 cursor-pointer focus:ring-0 w-full"
+                  >
+                    {SET_TYPES.map(t => <option key={t.value} value={t.value} className="bg-background">{t.label}</option>)}
+                  </select>
+                  
+                  <input 
+                    type="number" 
+                    value={set.weight || ''} 
+                    onChange={e => updateSet(exIndex, setIndex, 'weight', parseFloat(e.target.value) || 0)} 
+                    className="bg-transparent border-none outline-none text-center text-sm md:text-base font-medium p-0 focus:ring-0 placeholder:text-muted-foreground/30" 
+                    placeholder="-" 
+                  />
+                  
+                  <input 
+                    type="number" 
+                    value={set.reps || ''} 
+                    onChange={e => updateSet(exIndex, setIndex, 'reps', parseInt(e.target.value) || 0)} 
+                    className="bg-transparent border-none outline-none text-center text-sm md:text-base font-medium p-0 focus:ring-0 placeholder:text-muted-foreground/30" 
+                    placeholder="-" 
+                  />
+                  
+                  <input 
+                    type="number" 
+                    value={set.rpe || ''} 
+                    onChange={e => updateSet(exIndex, setIndex, 'rpe', parseFloat(e.target.value) || undefined)} 
+                    className="bg-transparent border-none outline-none text-center text-sm md:text-base font-medium p-0 focus:ring-0 placeholder:text-muted-foreground/30" 
+                    placeholder="-" 
+                    min="1" max="10" 
+                  />
+                  
+                  <input 
+                    type="text" 
+                    value={set.tempo || ''} 
+                    onChange={e => updateSet(exIndex, setIndex, 'tempo', e.target.value)} 
+                    className="bg-transparent border-none outline-none text-center text-xs md:text-sm p-0 focus:ring-0 placeholder:text-muted-foreground/30 hidden md:block" 
+                    placeholder="3010" 
+                  />
+                  
+                  <input 
+                    type="number" 
+                    value={set.restTime || ''} 
+                    onChange={e => updateSet(exIndex, setIndex, 'restTime', parseInt(e.target.value) || undefined)} 
+                    className="bg-transparent border-none outline-none text-center text-xs md:text-sm p-0 focus:ring-0 placeholder:text-muted-foreground/30 hidden md:block" 
+                    placeholder="120" 
+                  />
+                  
+                  <div className="flex items-center justify-end gap-1">
+                    <button 
+                      onClick={() => removeSet(exIndex, setIndex)} 
+                      className="w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                      <X className="h-3 w-3 md:h-4 md:w-4" />
+                    </button>
+                    <button 
+                      onClick={() => toggleSetComplete(exIndex, setIndex)} 
+                      className={`w-6 h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center transition-all ${set.completed ? 'bg-primary text-primary-foreground shadow-md shadow-primary/20 scale-105' : 'bg-muted hover:bg-border'}`}
+                    >
+                      <Check className="h-3 w-3 md:h-4 md:w-4" />
+                    </button>
+                  </div>
                 </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <button 
+                onClick={() => addSet(exIndex)} 
+                className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+              >
+                <Plus className="h-4 w-4" /> Add Set
+              </button>
+              
+              <div className="text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">{ex.sets.filter(s => s.completed).length}</span> sets done
               </div>
             </div>
 
-            <Button variant="outline" size="sm" onClick={() => addSet(exIndex)} className="w-full border-dashed">
-              <Plus className="mr-2 h-3 w-3" /> Add Set
-            </Button>
-
-            {/* Exercise Notes */}
-            <div className="pt-2">
-              <textarea
-                placeholder="Personal notes for this exercise (e.g. used wrist wraps, shoulder felt stable)..."
+            <div className="mt-6">
+              <input
+                type="text"
+                placeholder="Add exercise notes (e.g., shoulder felt good, dropped seat height)..."
                 value={ex.personalNotes}
                 onChange={e => updateExerciseField(exIndex, 'personalNotes', e.target.value)}
-                className="flex min-h-[40px] w-full rounded-md border border-input bg-background/50 px-3 py-2 text-xs ring-offset-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                className="w-full bg-transparent border-b border-border/30 pb-2 text-sm text-foreground outline-none focus:border-primary/50 placeholder:text-muted-foreground/40 transition-colors italic"
               />
             </div>
+            
+          </div>
+        ))}
+      </div>
 
-            {/* Exercise Summary Block */}
-            <div className="bg-primary/5 rounded-md p-3 flex justify-between items-center text-sm border border-primary/10">
-              <div className="font-medium text-primary">Exercise Summary</div>
-              <div className="flex gap-4 text-muted-foreground">
-                <span>Sets: <strong className="text-foreground">{ex.sets.filter(s => s.completed).length}</strong></span>
-                <span>Volume: <strong className="text-foreground">{ex.sets.reduce((vol, s) => vol + (s.completed ? s.weight * s.reps : 0), 0).toLocaleString()} kg</strong></span>
-              </div>
-            </div>
-
-          </CardContent>
-        </Card>
-      ))}
-
-      {/* Add Exercise Module */}
+      {/* Add Exercise Floating UI */}
       {showSearch ? (
-        <Card className="glass-card border-none shadow-lg">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between border-b border-border/50">
-            <div className="flex gap-4">
-              <button onClick={() => setActiveTab('search')} className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'search' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Search</button>
-              <button onClick={() => setActiveTab('recent')} className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'recent' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Recent</button>
-              <button onClick={() => setActiveTab('favorites')} className={`text-sm font-medium pb-2 border-b-2 transition-colors ${activeTab === 'favorites' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Favorites</button>
+        <div className="bg-card rounded-2xl border border-border/50 shadow-xl overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="p-4 flex flex-row items-center justify-between border-b border-border/50 bg-muted/10">
+            <div className="flex gap-6">
+              <button onClick={() => setActiveTab('search')} className={`text-sm font-medium pb-1 border-b-2 transition-all ${activeTab === 'search' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Search</button>
+              <button onClick={() => setActiveTab('recent')} className={`text-sm font-medium pb-1 border-b-2 transition-all ${activeTab === 'recent' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Recent</button>
+              <button onClick={() => setActiveTab('favorites')} className={`text-sm font-medium pb-1 border-b-2 transition-all ${activeTab === 'favorites' ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'}`}>Favorites</button>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => { setShowSearch(false); setSearchQuery(''); }}>
+            <Button variant="ghost" size="icon" onClick={() => { setShowSearch(false); setSearchQuery(''); }} className="h-8 w-8 rounded-full">
               <X className="h-4 w-4" />
             </Button>
-          </CardHeader>
-          <CardContent className="pt-4 space-y-4">
-            
+          </div>
+          <div className="p-4">
             {activeTab === 'search' && (
               <>
-                <div className="relative">
+                <div className="relative mb-4">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Search exercises..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-9" autoFocus />
+                  <input 
+                    placeholder="Search exercises..." 
+                    value={searchQuery} 
+                    onChange={e => setSearchQuery(e.target.value)} 
+                    className="w-full bg-muted/30 border border-border/50 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-primary/50 transition-colors" 
+                    autoFocus 
+                  />
                 </div>
-                {searchLoading && <div className="text-sm text-muted-foreground text-center py-4">Searching...</div>}
+                {searchLoading && <div className="text-sm text-muted-foreground text-center py-8">Searching database...</div>}
                 {searchResults.length > 0 && (
-                  <div className="space-y-1 max-h-64 overflow-y-auto">
+                  <div className="space-y-1 max-h-[300px] overflow-y-auto pr-2">
                     {searchResults.map((ex: any) => (
-                      <button key={ex._id} onClick={() => addExercise(ex)} className="w-full text-left p-3 rounded-lg hover:bg-muted transition-colors flex justify-between items-center">
+                      <button key={ex._id} onClick={() => addExercise(ex)} className="w-full text-left p-3 rounded-xl hover:bg-muted/50 transition-all flex justify-between items-center group">
                         <div>
-                          <div className="font-medium text-sm">{ex.name}</div>
-                          <div className="flex gap-2 mt-1">
+                          <div className="font-medium text-sm group-hover:text-primary transition-colors">{ex.name}</div>
+                          <div className="flex gap-2 mt-1.5 opacity-70">
                             {ex.primaryMuscles?.map((m: string) => (
-                              <span key={m} className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-primary/20 text-primary">{m.replace('_', ' ')}</span>
+                              <span key={m} className="text-[9px] uppercase font-bold tracking-wider">{m.replace('_', ' ')}</span>
                             ))}
-                            <span className="text-[10px] uppercase px-1.5 py-0.5 rounded bg-secondary text-secondary-foreground">{ex.equipment?.replace('_', ' ')}</span>
                           </div>
                         </div>
-                        <Plus className="h-4 w-4 text-muted-foreground" />
+                        <Plus className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
                       </button>
                     ))}
                   </div>
                 )}
                 {searchQuery && !searchLoading && searchResults.length === 0 && (
-                  <div className="text-sm text-muted-foreground text-center py-4">No exercises found</div>
+                  <div className="text-sm text-muted-foreground text-center py-8">No matching exercises found.</div>
                 )}
               </>
             )}
 
             {activeTab === 'recent' && (
-              <div className="text-sm text-muted-foreground text-center py-8 flex flex-col items-center gap-2">
-                <Clock className="h-8 w-8 text-muted-foreground/50" />
-                <p>Recent exercises will appear here.</p>
+              <div className="text-sm text-muted-foreground text-center py-12 flex flex-col items-center gap-3">
+                <Clock className="h-8 w-8 text-muted-foreground/30" />
+                <p>Your recent exercises will appear here.</p>
               </div>
             )}
 
             {activeTab === 'favorites' && (
-              <div className="text-sm text-muted-foreground text-center py-8 flex flex-col items-center gap-2">
-                <Star className="h-8 w-8 text-muted-foreground/50" />
-                <p>Favorite an exercise to see it here.</p>
+              <div className="text-sm text-muted-foreground text-center py-12 flex flex-col items-center gap-3">
+                <Star className="h-8 w-8 text-muted-foreground/30" />
+                <p>Exercises you star will appear here for quick access.</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       ) : (
-        <Button variant="outline" onClick={() => setShowSearch(true)} className="w-full border-dashed h-14 text-muted-foreground hover:text-foreground">
-          <Plus className="mr-2 h-5 w-5" /> Add Exercise
-        </Button>
+        <button 
+          onClick={() => setShowSearch(true)} 
+          className="w-full py-6 border border-dashed border-border/60 rounded-2xl text-muted-foreground hover:bg-muted/20 hover:text-foreground hover:border-border transition-all flex flex-col items-center justify-center gap-2"
+        >
+          <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center">
+            <Plus className="h-5 w-5" />
+          </div>
+          <span className="font-medium text-sm">Add Next Exercise</span>
+        </button>
       )}
     </div>
   );
