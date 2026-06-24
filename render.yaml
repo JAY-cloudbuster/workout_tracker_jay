@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: gymtracker-pro
+    env: node
+    plan: free
+    buildCommand: npm run install:all && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: CLIENT_URL
+        value: "" # Empty because client is served from the same domain
+      - key: MONGODB_URI
+        sync: false # Set this in the Render dashboard manually, or paste it here: mongodb+srv://kjayeshrao_db_user:b7v8uV8qTLxyUVyj@cluster0.qjdugqh.mongodb.net/?appName=Cluster0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 15m
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 7d
+      - key: COOKIE_SECRET
+        generateValue: true
